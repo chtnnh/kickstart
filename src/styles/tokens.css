@@ -1,0 +1,69 @@
+:root {
+  --font: ui-monospace, "Cascadia Code", "Roboto Mono", monospace;
+
+  --ks-bg: #2e3440;
+  --ks-fg: #eceff4;
+  --ks-accent: #88c0d0;
+  --ks-prompt: #ebcb8b;
+  --ks-prompt-dim: #4c566a;
+  --ks-link: #88c0d0;
+  --ks-link-hover: #8fbcbb;
+  --ks-widget-fg: #eceff4;
+  --ks-widget-muted: #d8dee9;
+  --ks-widget-accent: #88c0d0;
+  --ks-widget-border: rgba(236, 239, 244, 0.12);
+  --ks-widget-shadow: none;
+  --ks-bg-overlay: rgba(46, 52, 64, 0.5);
+
+  --background: var(--ks-bg);
+  --foreground: var(--ks-fg);
+  --cursor: var(--ks-widget-muted);
+  --color5: var(--ks-prompt);
+  --color6: var(--ks-link);
+  --color8: var(--ks-prompt-dim);
+  --color9: var(--ks-prompt-dim);
+  --color10: var(--ks-prompt);
+  --color12: var(--ks-link-hover);
+  --branch: 1px solid var(--color12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  overflow-y: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ks-bg);
+  color: var(--ks-fg);
+  font-family: var(--font);
+  min-height: 100dvh;
+  overflow-y: auto;
+}
+
+#app {
+  min-height: 100dvh;
+  position: relative;
+}
+
+.ks-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ks-widget-muted);
+  border-radius: 4px;
+}

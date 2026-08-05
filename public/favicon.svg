@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#2e3440"/>
+  <text x="4" y="22" font-family="monospace" font-size="14" fill="#a6e3a1">$</text>
+  <text x="14" y="22" font-family="monospace" font-size="12" fill="#88c0d0">ks</text>
+</svg>

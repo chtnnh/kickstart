@@ -1,0 +1,99 @@
+.ks-welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ks-bg-overlay);
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+}
+
+.ks-welcome-card {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  max-height: 100dvh;
+  padding: 1.5rem;
+  background: var(--ks-bg);
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 8px;
+  color: var(--ks-widget-fg);
+  font-family: var(--font, ui-monospace, monospace);
+  box-sizing: border-box;
+}
+
+.ks-welcome-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--ks-widget-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.ks-welcome-close:hover {
+  color: var(--ks-widget-fg);
+}
+
+.ks-welcome-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ks-widget-accent);
+}
+
+.ks-welcome-sub {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.ks-welcome-desc {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--ks-widget-muted);
+}
+
+.ks-welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ks-welcome-actions .ks-btn {
+  width: 100%;
+}
+
+.ks-welcome-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ks-widget-muted);
+  text-align: center;
+}
+
+.ks-welcome-input,
+.ks-welcome-file {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--ks-widget-fg);
+  background: transparent;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 4px;
+}
+
+.ks-welcome-error {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: #f25f4c;
+  min-height: 1.2em;
+}
