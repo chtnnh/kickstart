@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest an improvement or new capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to do? What's painful today?
+      placeholder: I want to ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: Describe what you'd like kickstart to do
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope (optional)
+      options:
+        - label: Willing to open a PR
+        - label: Related to StartTreeV2 parity
+        - label: Needs config schema change

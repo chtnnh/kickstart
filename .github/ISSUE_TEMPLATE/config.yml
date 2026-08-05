@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: StartTreeV2 (upstream themes)
+    url: https://github.com/AlexW00/StartTreeV2
+    about: Original theme CSS and tree UI — kickstart ports palettes from themes/

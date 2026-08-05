@@ -1,0 +1,81 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include enough detail to reproduce.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Tree / bookmarks
+        - Search widget
+        - Themes / appearance
+        - Widgets / layout
+        - Import / export / migration
+        - Cloud sync
+        - PWA / deployment
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: e.g. main @ abc1234, or v1.0.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open kickstart in edit mode
+        2. ...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & OS
+      placeholder: e.g. Firefox 128 / macOS 15
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / screen recording
+      description: Drag images here or paste links
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+    validations:
+      required: false

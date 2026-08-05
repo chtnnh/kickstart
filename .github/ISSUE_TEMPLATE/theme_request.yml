@@ -1,0 +1,91 @@
+name: Theme request or contribution
+description: Propose a new theme, fix theme colors, or credit a missing author
+title: "[Theme]: "
+labels: ["theme"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Themes use the StartTreeV2 16-color format (`background`, `foreground`, `cursor`, `color0`–`color15`).
+        See CONTRIBUTING.md and ATTRIBUTION.md in the repo root.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        - New theme
+        - Fix colors / naming for existing theme
+        - Attribution correction
+        - Port theme from StartTreeV2
+    validations:
+      required: true
+
+  - type: input
+    id: theme-id
+    attributes:
+      label: Theme id
+      description: kebab-case id matching `themes/*.css` (e.g. `catppuccin`, `MonokaiPro`)
+      placeholder: my-theme-name
+    validations:
+      required: true
+
+  - type: input
+    id: display-name
+    attributes:
+      label: Display name
+      placeholder: My Theme
+    validations:
+      required: false
+
+  - type: input
+    id: author
+    attributes:
+      label: Theme author(s)
+      description: Your name/GitHub + any upstream palette credit (Nord, Catppuccin, etc.)
+      placeholder: Jane Doe (@janedoe), based on Nord by Arctic Ice Studio
+    validations:
+      required: true
+
+  - type: dropdown
+    id: source
+    attributes:
+      label: Color source
+      options:
+        - Original palette
+        - Based on existing color scheme (Nord, Gruvbox, Catppuccin, …)
+        - pywal / wallpaper-generated
+        - Ported from StartTreeV2 themes/
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: colors
+    attributes:
+      label: Colors
+      description: Paste hex values or link to StartTreeV2 CSS / PR
+      placeholder: |
+        background: #1e1e2e
+        foreground: #cdd6f4
+        cursor: #cdd6f4
+        color0: ...
+        (through color15)
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot / reference
+      description: How should the theme look on the tree, search bar, and links?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: Contribution
+      options:
+        - label: I can open a PR with palette + ATTRIBUTION.md update
+        - label: I have already contributed this theme to StartTreeV2 upstream
