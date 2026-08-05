@@ -1,0 +1,31 @@
+name = "kickstart"
+main = "worker/index.ts"
+compatibility_date = "2025-04-01"
+
+# Keep workers.dev for smoke tests; production traffic uses the custom domain below
+workers_dev = true
+
+# Custom domain (zone must be on the same Cloudflare account)
+[[routes]]
+pattern = "kickstart.chtnnhfoundation.org"
+custom_domain = true
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Only sync API hits the User Worker — static assets are served directly at the edge
+run_worker_first = ["/api/sync/*"]
+
+[[kv_namespaces]]
+binding = "SYNC"
+# Replace after: npx wrangler kv namespace create kickstart-sync
+id = "3fd82d46aac2477dad1c19dba7020a85"
+preview_id = "b9756c2cb6ca4ba8babb1eee5f017039"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true
