@@ -12,6 +12,13 @@ npm run dev      # http://localhost:5173
 npm run build    # typecheck + production bundle
 ```
 
+## Testing
+
+```bash
+npm test           # unit + behavioral (Vitest)
+npm run test:e2e   # Playwright browser tests
+```
+
 ## What to work on
 
 - Bug fixes and UX polish
@@ -24,6 +31,8 @@ Please open an issue before large changes so we can align on approach.
 ## Pull request checklist
 
 - [ ] `npm run build` passes
+- [ ] `npm test` passes (unit + behavioral)
+- [ ] `npm run test:e2e` passes when UI flows change
 - [ ] Change is scoped to the problem (no drive-by refactors)
 - [ ] UI changes tested in view mode **and** edit mode
 - [ ] New themes documented in [ATTRIBUTION.md](ATTRIBUTION.md)

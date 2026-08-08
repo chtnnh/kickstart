@@ -1,3 +1,5 @@
+import { isValidSyncId, parseSyncIdFromPath, validateSyncPayload } from "./sync-utils.ts";
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -16,7 +18,6 @@ export interface Env {
   ASSETS: Fetcher;
 }
 
-const MAX_BLOB_SIZE = 102_400; // 100KB
 const RATE_LIMIT_WINDOW = 60_000;
 const RATE_LIMIT_MAX = 30;
 
@@ -39,8 +40,8 @@ async function handleSync(request: Request, env: Env, url: URL): Promise<Respons
     return new Response("Rate limit exceeded", { status: 429 });
   }
 
-  const syncId = url.pathname.replace("/api/sync/", "").trim();
-  if (!syncId || syncId.length > 64 || !/^[a-zA-Z0-9-]+$/.test(syncId)) {
+  const syncId = parseSyncIdFromPath(url.pathname);
+  if (!isValidSyncId(syncId)) {
     return new Response("Invalid sync ID", { status: 400 });
   }
 
@@ -54,13 +55,9 @@ async function handleSync(request: Request, env: Env, url: URL): Promise<Respons
 
   if (request.method === "PUT") {
     const body = await request.text();
-    if (body.length > MAX_BLOB_SIZE) {
-      return new Response("Payload too large", { status: 413 });
-    }
-    try {
-      JSON.parse(body);
-    } catch {
-      return new Response("Invalid JSON", { status: 400 });
+    const validation = validateSyncPayload(body);
+    if (!validation.ok) {
+      return new Response(validation.message, { status: validation.status });
     }
     await env.SYNC.put(syncId, body);
     return new Response("OK", { status: 200 });
