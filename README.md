@@ -68,7 +68,7 @@ Switch profiles in Settings → Profiles & privacy. Create named profiles to kee
 - **JSON** — exported `kickstart-config.json`
 - **StartTreeV2 URL** — paste a URL with `?t=~(...)` param
 - **Query param** — `?import=<encoded-json-or-url>` for one-time import
-- **Bookmarks HTML** — Netscape bookmark export from Settings
+- **Bookmarks HTML** — Netscape export via Settings → Import / Export
 
 ## Search
 

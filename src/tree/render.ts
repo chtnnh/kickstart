@@ -3,27 +3,83 @@ import type { Bookmark, BookmarkCategory, BookmarkColumn } from "../config/types
 import { saveConfig } from "../config/store.ts";
 import { setupTreeDnD } from "./dnd.ts";
 import { iconButton, ICONS } from "../ui/icons.ts";
+import {
+  loadCollapsed,
+  saveCollapsed,
+  loadCollapseAll,
+  saveCollapseAll,
+  isCategoryCollapsed,
+  toggleCategoryCollapsed,
+  toggleCollapseAll,
+} from "./collapse-state.ts";
+import { attachFavicon } from "./favicon.ts";
+import { pushUndo, popUndo, undoDepth } from "./undo.ts";
+import { duplicateCategory, openAllInCategory } from "./actions.ts";
+import { bookmarkUrlError } from "./validate.ts";
 
 const EMPTY_CATEGORY = (): BookmarkCategory => ({
   cn: "new category",
   b: [{ n: "new link", u: "" }],
 });
 
-const collapsedCategories = new Set<string>();
-let collapseAll = false;
-
-function catKey(colIdx: number, catIdx: number): string {
-  return `${colIdx}:${catIdx}`;
-}
+const collapsedCategories = loadCollapsed();
+let collapseAll = loadCollapseAll();
 
 function commit(ctx: AppContext): void {
   saveConfig(ctx.config);
   ctx.onConfigChange(ctx.config);
 }
 
+function snapshotUndo(ctx: AppContext, label: string): void {
+  pushUndo(label, ctx.config.tree.columns);
+}
+
+function undoLast(ctx: AppContext): void {
+  const entry = popUndo();
+  if (!entry) return;
+  ctx.config.tree.columns = entry.columns;
+  commit(ctx);
+  refreshUndoBar();
+}
+
+function refreshUndoBar(): void {
+  const bar = document.querySelector(".ks-undo-bar");
+  if (undoDepth() === 0) {
+    bar?.remove();
+    return;
+  }
+  if (!bar) {
+    const el = document.createElement("div");
+    el.className = "ks-undo-bar";
+    el.innerHTML = `<span class="ks-undo-bar-msg"></span><button type="button" class="ks-btn ks-btn--small">Undo</button>`;
+    document.body.appendChild(el);
+    el.querySelector("button")?.addEventListener("click", () => {
+      const appUndo = (window as unknown as { __ksUndo?: () => void }).__ksUndo;
+      appUndo?.();
+    });
+  }
+  const msg = document.querySelector(".ks-undo-bar-msg");
+  if (msg) msg.textContent = "Change saved — undo available";
+}
+
+function notifyDelete(ctx: AppContext, label: string): void {
+  snapshotUndo(ctx, label);
+  refreshUndoBar();
+}
+
+export function bindTreeUndoHandler(handler: () => void): void {
+  (window as unknown as { __ksUndo?: () => void }).__ksUndo = handler;
+}
+
 export function renderTree(ctx: AppContext): HTMLElement {
+  bindTreeUndoHandler(() => undoLast(ctx));
+  refreshUndoBar();
+
   const container = document.createElement("div");
   container.className = "tree-container";
+  if (ctx.config.tree.columns.length === 1) {
+    container.classList.add("tree-container--single");
+  }
 
   const prompt = document.createElement("div");
   prompt.className = "prompt tree-header";
@@ -35,8 +91,11 @@ export function renderTree(ctx: AppContext): HTMLElement {
     collapseAllBtn.className = "ks-btn ks-btn--small";
     collapseAllBtn.textContent = collapseAll ? "Expand all" : "Collapse all";
     collapseAllBtn.addEventListener("click", () => {
-      collapseAll = !collapseAll;
-      commit(ctx);
+      const next = toggleCollapseAll(ctx.config.tree.columns);
+      collapseAll = next.collapseAll;
+      collapsedCategories.clear();
+      for (const k of next.manual) collapsedCategories.add(k);
+      ctx.onConfigChange(ctx.config);
     });
     prompt.appendChild(collapseAllBtn);
   }
@@ -58,6 +117,7 @@ export function renderTree(ctx: AppContext): HTMLElement {
     addCol.setAttribute("aria-label", "Add column");
     addCol.textContent = "+";
     addCol.addEventListener("click", () => {
+      snapshotUndo(ctx, "add column");
       ctx.config.tree.columns.push([EMPTY_CATEGORY()]);
       commit(ctx);
     });
@@ -94,6 +154,7 @@ function renderColumn(ctx: AppContext, col: BookmarkColumn, colIdx: number): HTM
       e.stopPropagation();
       if (ctx.config.tree.columns.length <= 1) return;
       if (!confirm("Delete this column and all its contents?")) return;
+      notifyDelete(ctx, "column");
       ctx.config.tree.columns.splice(colIdx, 1);
       commit(ctx);
     });
@@ -117,6 +178,7 @@ function renderColumn(ctx: AppContext, col: BookmarkColumn, colIdx: number): HTM
     addCat.className = "ks-btn ks-btn--small";
     addCat.textContent = "+ category";
     addCat.addEventListener("click", () => {
+      snapshotUndo(ctx, "add category");
       col.push(EMPTY_CATEGORY());
       commit(ctx);
     });
@@ -125,6 +187,17 @@ function renderColumn(ctx: AppContext, col: BookmarkColumn, colIdx: number): HTM
 
   column.appendChild(tree);
   return column;
+}
+
+function updateCategoryCollapse(
+  toggle: HTMLButtonElement,
+  body: HTMLElement,
+  collapsed: boolean,
+): void {
+  body.hidden = collapsed;
+  toggle.textContent = collapsed ? "▸" : "▾";
+  toggle.title = collapsed ? "Expand category" : "Collapse category";
+  toggle.setAttribute("aria-expanded", String(!collapsed));
 }
 
 function renderCategory(
@@ -140,8 +213,7 @@ function renderCategory(
   li.dataset.catIdx = String(catIdx);
   li.dataset.dndDrop = "category";
 
-  const key = catKey(colIdx, catIdx);
-  const isCollapsed = ctx.editMode && (collapseAll || collapsedCategories.has(key));
+  const isCollapsed = isCategoryCollapsed(colIdx, catIdx, collapseAll, collapsedCategories);
 
   const h1 = document.createElement("h1");
   h1.className = "category-header";
@@ -149,15 +221,39 @@ function renderCategory(
   const toggle = document.createElement("button");
   toggle.type = "button";
   toggle.className = "ks-collapse-btn";
+  toggle.setAttribute("aria-label", "Toggle category");
   toggle.textContent = isCollapsed ? "▸" : "▾";
   toggle.title = isCollapsed ? "Expand category" : "Collapse category";
+  toggle.setAttribute("aria-expanded", String(!isCollapsed));
+
+  const body = document.createElement("div");
+  body.className = "category-body";
+  body.hidden = isCollapsed;
+
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (collapsedCategories.has(key)) collapsedCategories.delete(key);
-    else collapsedCategories.add(key);
-    commit(ctx);
+    const next = toggleCategoryCollapsed(
+      colIdx,
+      catIdx,
+      ctx.config.tree.columns,
+      collapseAll,
+      collapsedCategories,
+    );
+    collapseAll = next.collapseAll;
+    collapsedCategories.clear();
+    for (const k of next.manual) collapsedCategories.add(k);
+    saveCollapsed(collapsedCategories);
+    saveCollapseAll(collapseAll);
+    updateCategoryCollapse(toggle, body, next.collapsed);
   });
-  if (ctx.editMode) h1.appendChild(toggle);
+  h1.appendChild(toggle);
+
+  const openAll = iconButton(ICONS.external, "ks-btn ks-btn--icon ks-category-open", "Open all links");
+  openAll.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openAllInCategory(cat);
+  });
+  h1.appendChild(openAll);
 
   if (ctx.editMode) {
     const grip = document.createElement("span");
@@ -177,9 +273,20 @@ function renderCategory(
     });
     h1.appendChild(nameInput);
 
+    const dupCat = iconButton(ICONS.copy, "ks-btn ks-btn--icon", "Duplicate category");
+    dupCat.addEventListener("click", (e) => {
+      e.stopPropagation();
+      snapshotUndo(ctx, "duplicate category");
+      duplicateCategory(ctx.config.tree.columns, colIdx, catIdx);
+      commit(ctx);
+    });
+    h1.appendChild(dupCat);
+
     const delCat = iconButton(ICONS.trash, "ks-btn ks-btn--icon ks-btn--danger", "Delete category");
     delCat.addEventListener("click", (e) => {
       e.stopPropagation();
+      if (!confirm("Delete this category and all its links?")) return;
+      notifyDelete(ctx, "category");
       ctx.config.tree.columns[colIdx]!.splice(catIdx, 1);
       if (ctx.config.tree.columns[colIdx]!.length === 0 && ctx.config.tree.columns.length > 1) {
         ctx.config.tree.columns.splice(colIdx, 1);
@@ -196,10 +303,6 @@ function renderCategory(
 
   li.appendChild(h1);
 
-  const body = document.createElement("div");
-  body.className = "category-body";
-  if (isCollapsed) body.hidden = true;
-
   const ul = document.createElement("ul");
   ul.className = "bookmark-list";
   cat.b.forEach((bm, bmIdx) => {
@@ -212,6 +315,7 @@ function renderCategory(
     addBm.className = "ks-btn ks-btn--small";
     addBm.textContent = "+ link";
     addBm.addEventListener("click", () => {
+      snapshotUndo(ctx, "add link");
       cat.b.push({ n: "new link", u: "" });
       commit(ctx);
     });
@@ -258,20 +362,43 @@ function renderBookmark(
     });
     row.appendChild(nameInput);
 
+    const urlWrap = document.createElement("div");
+    urlWrap.className = "ks-url-field";
+
     const urlInput = document.createElement("input");
     urlInput.type = "text";
     urlInput.className = "ks-field-input ks-field-input--url";
     urlInput.value = bm.u;
-    urlInput.placeholder = "url";
+    urlInput.placeholder = "https://example.com";
+    const syncUrlValidation = () => {
+      const err = bookmarkUrlError(bm.u);
+      urlInput.classList.toggle("ks-field-input--invalid", Boolean(err));
+      urlInput.setAttribute("aria-invalid", err ? "true" : "false");
+      let hint = urlWrap.querySelector(".ks-field-error");
+      if (err) {
+        if (!hint) {
+          hint = document.createElement("span");
+          hint.className = "ks-field-error";
+          urlWrap.appendChild(hint);
+        }
+        hint.textContent = err;
+      } else {
+        hint?.remove();
+      }
+    };
     urlInput.addEventListener("input", () => {
       bm.u = urlInput.value;
+      syncUrlValidation();
       saveConfig(ctx.config);
     });
-    row.appendChild(urlInput);
+    urlInput.addEventListener("blur", syncUrlValidation);
+    urlWrap.appendChild(urlInput);
+    row.appendChild(urlWrap);
 
     const del = iconButton(ICONS.trash, "ks-btn ks-btn--icon ks-btn--danger", "Delete link");
     del.addEventListener("click", (e) => {
       e.stopPropagation();
+      notifyDelete(ctx, "link");
       ctx.config.tree.columns[colIdx]![catIdx]!.b.splice(bmIdx, 1);
       commit(ctx);
     });
@@ -282,6 +409,7 @@ function renderBookmark(
     a.href = bm.u.includes("//") ? bm.u : bm.u ? "//" + bm.u : "#";
     a.textContent = bm.n;
     if (!bm.u) a.addEventListener("click", (e) => e.preventDefault());
+    attachFavicon(a, bm.u, ctx.config.privacy?.favicons !== false);
     row.appendChild(a);
   }
 
