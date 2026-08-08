@@ -1,3 +1,3 @@
-export type { WidgetConfig } from "../config/types.ts";
+export const WIDGET_TYPES = ["search", "tree", "clock", "quote", "spacer", "pomodoro", "note", "hn"] as const;
 
-export const WIDGET_TYPES = ["search", "tree", "clock", "quote", "spacer"] as const;
+export type WidgetType = (typeof WIDGET_TYPES)[number];

@@ -94,10 +94,13 @@ Sync is passphrase-based and end-to-end encrypted. The server only stores cipher
 
 | Widget | Default zone | Notes |
 |--------|--------------|-------|
-| search | top | Preset engines or custom URL; removable |
+| search | top | Preset engines or custom URL; dual-row config in edit mode |
 | tree | main | Always present; not deletable |
-| clock | — | Add from Settings; 12h/24h + optional seconds |
+| clock | — | Add from Settings; multi-timezone, row/column layout |
 | quote | — | Random or custom text |
+| pomodoro | — | Focus/break timer with daily stats and notifications |
+| note | — | Sticky note text |
+| hn | — | Hacker News front-page headlines |
 | spacer | — | Vertical gap |
 
 In edit mode, use the arrow toolbar to move widgets between zones (top → above-tree → main → below-tree → bottom).
