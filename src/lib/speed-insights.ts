@@ -3,7 +3,8 @@
  * Loaded on idle so it does not compete with first paint.
  * @see https://developers.cloudflare.com/speed/speed-insights/
  */
-export function initSpeedInsights(): void {
+export function initSpeedInsights(config?: { privacy?: { analytics?: boolean } }): void {
+  if (config?.privacy?.analytics === false) return;
   const token = import.meta.env.VITE_CF_WEB_ANALYTICS_TOKEN;
   if (!token) return;
 

@@ -81,6 +81,21 @@ Switch profiles in Settings → Profiles & privacy. Create named profiles to kee
 
 In edit mode the search bar uses a dual-row layout: input on top, engine and multi-search config below.
 
+## Keyboard shortcuts
+
+| Key | Action |
+|-----|--------|
+| `/` | Focus search |
+| `Ctrl/Cmd+K` | Command palette |
+| `,` | Open settings |
+| `e` | Toggle edit mode |
+| `Esc` | Blur search, then close overlays |
+| `↑` / `↓` | Cycle recent searches (in search input) |
+| `Shift+Enter` | Multi-search (when enabled) |
+| `?` | Show shortcut help |
+
+Type `=expr` in search for calculator results (e.g. `=2+2`). Use `!gh query` for bang searches.
+
 ## Cloud sync
 
 Sync is passphrase-based and end-to-end encrypted. The server only stores ciphertext.
