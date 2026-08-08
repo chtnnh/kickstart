@@ -2,6 +2,8 @@
 
 A fast, private new-tab start page inspired by [StartTreeV2](https://github.com/AlexW00/StartTreeV2) and the original [StartTree](https://github.com/Paul-Houser/StartTree).
 
+**v2.0** adds a theme editor, keyboard shortcuts, command palette, new widgets (pomodoro, sticky note, HN headlines), bookmark import, profiles, and performance improvements. Weather/news and live pywal sync are planned for a future release.
+
 - **Stable URL** — config lives in `localStorage`, not the address bar
 - **Fast** — Vite bundle, service worker, Cloudflare edge caching
 - **Portable** — JSON export/import, StartTreeV2 URL migration
@@ -55,8 +57,11 @@ See [`public/_headers`](public/_headers) for asset cache policy. Sync API routes
 
 | Key | Purpose |
 |-----|---------|
-| `kickstart:config` | Full page config (bookmarks, theme, widgets, layout) |
-| `kickstart:meta` | Onboarding state (not synced/exported) |
+| `kickstart:config` | Default profile config (bookmarks, theme, widgets, layout) |
+| `kickstart:config:{id}` | Named profile configs |
+| `kickstart:meta` | Active profile, profile list, onboarding state (not synced/exported) |
+
+Switch profiles in Settings → Profiles & privacy. Create named profiles to keep separate trees and themes on one device.
 
 ## Import formats
 

@@ -2,7 +2,7 @@ import type { KickstartConfig, WidgetConfig } from "./types.ts";
 
 export function createDefaultConfig(): KickstartConfig {
   return {
-    v: "1",
+    v: "2",
     search: {
       name: "ddg",
       url: "https://duckduckgo.com/?q=",
@@ -36,8 +36,9 @@ export function createDefaultConfig(): KickstartConfig {
         ],
       ],
     },
-    theme: { preset: "catppuccin" },
-    appearance: { background: { type: "none" } },
+    theme: { preset: "catppuccin", mode: "fixed", themes: {} },
+    appearance: { background: { type: "none" }, fontSize: "md" },
+    privacy: { analytics: true, favicons: true },
     widgets: defaultWidgets(),
     sync: { enabled: false },
   };

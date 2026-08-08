@@ -1,14 +1,16 @@
 import type { KickstartConfig, KickstartMeta } from "./types.ts";
-import { CONFIG_KEY, META_KEY } from "./types.ts";
+import { META_KEY, configStorageKey } from "./types.ts";
 import { createDefaultConfig } from "./defaults.ts";
-import { validateConfig } from "./migrate-starttree.ts";
+import { validateConfig } from "./migrate.ts";
 
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 const listeners = new Set<(config: KickstartConfig) => void>();
 
 export function loadConfig(): KickstartConfig | null {
   try {
-    const raw = localStorage.getItem(CONFIG_KEY);
+    const meta = loadMeta();
+    const key = configStorageKey(meta.activeProfile ?? "default");
+    const raw = localStorage.getItem(key);
     if (!raw) return null;
     return validateConfig(JSON.parse(raw));
   } catch {
@@ -18,7 +20,9 @@ export function loadConfig(): KickstartConfig | null {
 
 export function saveConfig(config: KickstartConfig, immediate = false): void {
   const write = () => {
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+    const meta = loadMeta();
+    const key = configStorageKey(meta.activeProfile ?? "default");
+    localStorage.setItem(key, JSON.stringify(config));
     listeners.forEach((fn) => fn(config));
   };
   if (immediate) {
@@ -37,11 +41,37 @@ export function getOrCreateConfig(): KickstartConfig {
 export function loadMeta(): KickstartMeta {
   try {
     const raw = localStorage.getItem(META_KEY);
-    if (raw) return JSON.parse(raw) as KickstartMeta;
+    if (raw) {
+      const meta = JSON.parse(raw) as KickstartMeta;
+      meta.activeProfile ??= "default";
+      meta.profiles ??= ["default"];
+      return meta;
+    }
   } catch {
     /* ignore */
   }
-  return { onboarded: false };
+  return { onboarded: false, activeProfile: "default", profiles: ["default"] };
+}
+
+export function listProfiles(): string[] {
+  return loadMeta().profiles ?? ["default"];
+}
+
+export function switchProfile(profileId: string): KickstartConfig | null {
+  const meta = loadMeta();
+  if (!meta.profiles?.includes(profileId)) return null;
+  saveMeta({ ...meta, activeProfile: profileId });
+  return loadConfig();
+}
+
+export function createProfile(profileId: string, config?: KickstartConfig): void {
+  const meta = loadMeta();
+  const profiles = meta.profiles ?? ["default"];
+  if (!profiles.includes(profileId)) profiles.push(profileId);
+  saveMeta({ ...meta, profiles, activeProfile: profileId });
+  if (config) {
+    localStorage.setItem(configStorageKey(profileId), JSON.stringify(validateConfig(config)));
+  }
 }
 
 export function saveMeta(meta: KickstartMeta): void {

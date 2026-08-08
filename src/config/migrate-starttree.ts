@@ -2,6 +2,7 @@ import { parse } from "./jsurl.ts";
 import type { KickstartConfig } from "./types.ts";
 import { defaultWidgets } from "./defaults.ts";
 import { STARTTREE_THEME_ORDER, resolvePresetId } from "../themes/presets.ts";
+import { validateConfig } from "./migrate.ts";
 
 const STARTTREE_THEMES = [...STARTTREE_THEME_ORDER];
 
@@ -30,7 +31,7 @@ export function migrateStartTreeConfig(st: StartTreeConfig): KickstartConfig {
   const presetName = STARTTREE_THEMES[themeNr] ?? "nord";
 
   return {
-    v: "1",
+    v: "2",
     search: {
       name: st.s?.n ?? "ddg",
       url: st.s?.u ?? "https://duckduckgo.com/?q=",
@@ -38,8 +39,9 @@ export function migrateStartTreeConfig(st: StartTreeConfig): KickstartConfig {
     tree: {
       columns: st.bmc ?? [[]],
     },
-    theme: { preset: resolvePresetId(presetName) },
-    appearance: { background: { type: "none" } },
+    theme: { preset: resolvePresetId(presetName), mode: "fixed", themes: {} },
+    appearance: { background: { type: "none" }, fontSize: "md" },
+    privacy: { analytics: true, favicons: true },
     widgets: defaultWidgets(),
     sync: { enabled: false },
   };
@@ -57,12 +59,3 @@ export function parseImportInput(input: string): KickstartConfig {
   throw new Error("Unrecognized import format");
 }
 
-export function validateConfig(raw: unknown): KickstartConfig {
-  const c = raw as KickstartConfig;
-  if (!c || c.v !== "1") throw new Error("Invalid config version");
-  if (!c.search || !c.tree || !c.widgets) throw new Error("Missing required config fields");
-  if (c.theme?.preset) {
-    c.theme.preset = resolvePresetId(c.theme.preset);
-  }
-  return c;
-}
