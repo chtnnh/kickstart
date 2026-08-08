@@ -68,6 +68,18 @@ Switch profiles in Settings → Profiles & privacy. Create named profiles to kee
 - **JSON** — exported `kickstart-config.json`
 - **StartTreeV2 URL** — paste a URL with `?t=~(...)` param
 - **Query param** — `?import=<encoded-json-or-url>` for one-time import
+- **Bookmarks HTML** — Netscape bookmark export from Settings
+
+## Search
+
+- **Preset engines** — DDG, Google, YouTube, GitHub, Reddit, Wikipedia, Hacker News, Stack Overflow, or custom URL
+- **Bangs** — `!gh kickstart` redirects to engine-specific search
+- **Calculator** — `=2+2`, `=2^8` evaluates inline
+- **History** — ↑/↓ cycles recent queries; ↑ past the newest clears the bar
+- **Multi-search** — enable in edit mode; Shift+Enter opens the query in multiple engines
+- **Icons** — official brand SVGs via [Simple Icons](https://simpleicons.org)
+
+In edit mode the search bar uses a dual-row layout: input on top, engine and multi-search config below.
 
 ## Cloud sync
 

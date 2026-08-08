@@ -1,4 +1,11 @@
-import { SEARCH_ENGINES, matchEngine, type SearchEngine } from "./search-presets.ts";
+import {
+  SEARCH_ENGINES,
+  matchEngine,
+  resolveBang,
+  engineParam,
+  resolveMultiSearchEngines,
+  type SearchEngine,
+} from "./search-presets.ts";
 
 export function getSearchLabel(
   search: { name: string; url: string; label?: string },
@@ -18,4 +25,4 @@ export function applySearchEngine(
   search.label = engine.name;
 }
 
-export { SEARCH_ENGINES, matchEngine };
+export { SEARCH_ENGINES, matchEngine, resolveBang, engineParam, resolveMultiSearchEngines };

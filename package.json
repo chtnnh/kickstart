@@ -26,5 +26,8 @@
     "vitest": "^3.2.1",
     "workbox-window": "^7.4.1",
     "wrangler": "^4.119.0"
+  },
+  "dependencies": {
+    "simple-icons": "^16.28.0"
   }
 }
