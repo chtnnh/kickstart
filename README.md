@@ -4,8 +4,6 @@ A fast, private new-tab start page inspired by [StartTreeV2](https://github.com/
 
 **v2.0** adds a theme editor, keyboard shortcuts, command palette, new widgets (pomodoro, sticky note, HN headlines), bookmark import, profiles, and performance improvements. Weather/news and live pywal sync are planned for a future release.
 
-**v2.0** adds a theme editor, keyboard shortcuts, command palette, new widgets (pomodoro, sticky note, HN headlines), bookmark import, profiles, and performance improvements. Weather/news and live pywal sync are planned for a future release.
-
 - **Stable URL** — config lives in `localStorage`, not the address bar
 - **Fast** — Vite bundle, service worker, Cloudflare edge caching
 - **Portable** — JSON export/import, StartTreeV2 URL migration
@@ -33,7 +31,7 @@ Full setup: **[docs/DEPLOY.md](docs/DEPLOY.md)**
 **Production deploys** run via GitHub Actions when you push a version tag:
 
 ```bash
-git tag v1.0.0 && git push origin v1.0.0
+git tag v2.0.0 && git push origin v2.0.0
 ```
 
 Manual deploy (optional):
