@@ -1,4 +1,5 @@
 import { STARTTREE_PALETTES, type StartTreePalette } from "./starttree-palettes.ts";
+import type { CustomTheme, KickstartConfig } from "../config/types.ts";
 
 export interface ThemeTokens {
   "--ks-bg": string;
@@ -53,6 +54,7 @@ export const STARTTREE_THEME_ORDER = [
   "Programiz",
   "autumn-mech",
   "catppuccin",
+  "high-contrast",
 ] as const;
 
 /** Legacy kickstart preset ids → StartTreeV2 theme file names. */
@@ -110,7 +112,35 @@ export function resolvePresetId(id: string): string {
   return PRESET_ALIASES[id] ?? id;
 }
 
-export function getPreset(id: string): ThemePreset {
+export function getPreset(id: string, customThemes?: Record<string, CustomTheme>): ThemePreset {
   const resolved = resolvePresetId(id);
+  const custom = customThemes?.[resolved];
+  if (custom) {
+    return {
+      id: resolved,
+      name: custom.label,
+      palette: custom.palette,
+      tokens: tokensFromPalette(custom.palette),
+    };
+  }
   return THEME_PRESETS.find((p) => p.id === resolved) ?? THEME_PRESETS.find((p) => p.id === "catppuccin")!;
+}
+
+export function resolveActivePresetId(config: KickstartConfig): string {
+  if (config.theme.mode === "system") {
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return dark
+      ? (config.theme.systemDark ?? config.theme.preset ?? "catppuccin")
+      : (config.theme.systemLight ?? config.theme.preset ?? "nord");
+  }
+  return config.theme.preset ?? "catppuccin";
+}
+
+export function listThemeOptions(config: KickstartConfig): Array<{ id: string; name: string }> {
+  const builtins = THEME_PRESETS.map((p) => ({ id: p.id, name: p.name }));
+  const custom = Object.entries(config.theme.themes ?? {}).map(([id, t]) => ({
+    id,
+    name: t.label,
+  }));
+  return [...builtins, ...custom];
 }

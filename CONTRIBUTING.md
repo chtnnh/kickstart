@@ -40,6 +40,8 @@ Please open an issue before large changes so we can align on approach.
 
 ## Code conventions
 
+After `npm run build`, the main entry chunk should stay **under 15 KB gzip** (check `dist/assets/` or run `npm run analyze` for `dist/stats.html`). Lazy-loaded chunks (settings, tree, cmd) are excluded from this budget.
+
 - **TypeScript** — strict types, minimal `any`
 - **Vanilla DOM** — no framework; match existing patterns in `src/`
 - **CSS** — use theme tokens (`--color*`, `--ks-*`); avoid hardcoded colors in components

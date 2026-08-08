@@ -611,4 +611,25 @@ export const STARTTREE_PALETTES: Record<string, StartTreePalette> = {
     color14: "#cba6f7",
     color15: "#f2cdcd"
   },
+  "high-contrast": {
+    background: "#000000",
+    foreground: "#ffffff",
+    cursor: "#ffff00",
+    color0: "#000000",
+    color1: "#1a1a1a",
+    color2: "#333333",
+    color3: "#4d4d4d",
+    color4: "#666666",
+    color5: "#ffffff",
+    color6: "#ffff00",
+    color7: "#00ffff",
+    color8: "#ff6666",
+    color9: "#ffaa00",
+    color10: "#ffff66",
+    color11: "#66ff66",
+    color12: "#66ffff",
+    color13: "#6699ff",
+    color14: "#cc99ff",
+    color15: "#ffffff"
+  },
 };

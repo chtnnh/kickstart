@@ -1,6 +1,8 @@
 import type { KickstartConfig } from "../config/types.ts";
-import { getPreset, type ThemeTokens } from "./presets.ts";
+import { getPreset, resolveActivePresetId, type ThemeTokens } from "./presets.ts";
 import type { StartTreePalette } from "./starttree-palettes.ts";
+
+let systemThemeListener: (() => void) | null = null;
 
 function applyStartTreePalette(root: HTMLElement, palette: StartTreePalette): void {
   root.style.setProperty("--background", palette.background);
@@ -15,8 +17,24 @@ function applyStartTreePalette(root: HTMLElement, palette: StartTreePalette): vo
   root.style.setProperty("--branch", `1px solid ${palette.color12}`);
 }
 
+function updateThemeColorMeta(bg: string): void {
+  let meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
+  }
+  meta.content = bg;
+}
+
+function applyFontSize(root: HTMLElement, size?: "sm" | "md" | "lg"): void {
+  const scale = size === "sm" ? "0.9" : size === "lg" ? "1.1" : "1";
+  root.style.setProperty("--ks-font-scale", scale);
+}
+
 export function applyTheme(config: KickstartConfig): void {
-  const preset = getPreset(config.theme.preset ?? "catppuccin");
+  const presetId = resolveActivePresetId(config);
+  const preset = getPreset(presetId, config.theme.themes);
   const tokens: ThemeTokens = { ...preset.tokens };
 
   if (config.theme.custom) {
@@ -34,6 +52,32 @@ export function applyTheme(config: KickstartConfig): void {
   if (config.appearance?.font) {
     root.style.setProperty("--font", config.appearance.font);
   }
+
+  applyFontSize(root, config.appearance?.fontSize);
+  updateThemeColorMeta(preset.palette.background);
+  root.style.colorScheme = isColorDark(preset.palette.background) ? "dark" : "light";
+}
+
+function isColorDark(hex: string): boolean {
+  if (!hex.startsWith("#") || hex.length < 7) return true;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 < 128;
+}
+
+export function watchSystemTheme(onChange: () => void): () => void {
+  if (systemThemeListener) {
+    window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", systemThemeListener);
+  }
+  systemThemeListener = onChange;
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", onChange);
+  return () => {
+    if (systemThemeListener) {
+      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", systemThemeListener);
+      systemThemeListener = null;
+    }
+  };
 }
 
 export function applyBackground(config: KickstartConfig): void {
@@ -44,6 +88,7 @@ export function applyBackground(config: KickstartConfig): void {
   if (!appearance || appearance.type === "none") {
     bg.style.background = "";
     bg.style.backdropFilter = "";
+    bg.style.boxShadow = "";
     return;
   }
 

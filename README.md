@@ -85,10 +85,18 @@ In edit mode the search bar uses a dual-row layout: input on top, engine and mul
 
 Sync is passphrase-based and end-to-end encrypted. The server only stores ciphertext.
 
-1. Open Settings → Cloud sync
-2. Set a passphrase → **Push to cloud**
+**Push to cloud** (Settings → Cloud sync):
+
+1. Enter your passphrase
+2. Click **Push to cloud**
 3. Save the displayed Sync ID
-4. On another device: **Restore from sync** (welcome screen or settings)
+
+**Pull from cloud** (new device):
+
+1. Enter the Sync ID and the same passphrase
+2. Click **Pull from cloud**
+
+You can also restore from the welcome screen on first visit.
 
 ## Widgets
 
@@ -107,7 +115,7 @@ In edit mode, use the arrow toolbar to move widgets between zones (top → above
 
 ## Themes
 
-All **28 themes** from StartTreeV2 are included with colors ported verbatim from upstream CSS. Select one in Settings → Appearance.
+All **28 themes** from StartTreeV2 are included with colors ported verbatim from upstream CSS. Select one in Settings → Appearance, or use the theme editor to customize accent colors and backgrounds.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) for per-theme credits (StartTreeV2 contributors, Nord, Gruvbox, Catppuccin, Monokai Pro, pywal-generated themes, etc.).
 
