@@ -31,7 +31,40 @@ button:focus {
 }
 
 body.ks-editing .tree-container {
+  width: fit-content;
+  max-width: 100%;
+}
+
+body.ks-editing .bookmark-row {
+  display: grid;
+  grid-template-columns: auto minmax(3.5rem, 7rem) minmax(8rem, 1fr) auto;
+  align-items: center;
+  gap: 0.2rem 0.35rem;
+  flex-wrap: nowrap;
+}
+
+body.ks-editing .ks-url-field {
+  display: contents;
+}
+
+body.ks-editing .ks-field-input--url {
   width: 100%;
+  min-width: 0;
+  max-width: none;
+  flex: unset;
+}
+
+body.ks-editing .ks-field-error {
+  grid-column: 3;
+  margin-top: -0.15rem;
+  line-height: 1.2;
+}
+
+body.ks-editing .category-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .tree-row {
@@ -233,6 +266,108 @@ form h1 {
   color: var(--color5);
 }
 
+.search-bar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.search-bar--edit {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: min(36rem, 100%);
+  gap: 0.65rem;
+}
+
+.search-bar--edit form {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.search-bar--edit form input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+.search-history-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.search-history-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ks-widget-muted);
+  cursor: pointer;
+}
+
+.search-history-btn:hover {
+  color: var(--ks-widget-accent);
+  border-color: var(--ks-widget-accent);
+}
+
+.search-history-panel {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 200;
+  min-width: 14rem;
+  max-width: 22rem;
+  background: var(--ks-bg);
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.search-history-header {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ks-widget-muted);
+  border-bottom: 1px solid var(--ks-widget-border);
+}
+
+.search-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.search-history-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.55rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ks-widget-fg);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.search-history-item:hover {
+  background: color-mix(in srgb, var(--ks-widget-accent) 12%, transparent);
+  color: var(--ks-widget-accent);
+}
+
 .search-bar form {
   display: inline-flex;
   align-items: center;
@@ -278,10 +413,16 @@ textarea {
 .search-edit-row,
 .search-custom-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.25rem;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.search-edit-row-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ks-widget-muted);
 }
 
 .ks-field-input {
@@ -301,6 +442,41 @@ textarea {
 .ks-field-input--url {
   flex: 1 1 10rem;
   max-width: 16rem;
+}
+
+.tree-container--single .tree-row {
+  justify-content: center;
+}
+
+.tree-container--single .column {
+  margin-inline: auto;
+}
+
+.ks-category-open {
+  opacity: 0.55;
+}
+
+.category-header:hover .ks-category-open,
+.category-header:focus-within .ks-category-open {
+  opacity: 1;
+}
+
+.ks-url-field {
+  flex: 1 1 10rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ks-field-error {
+  font-size: 0.65rem;
+  color: #f38ba8;
+  margin-top: 0.1rem;
+}
+
+.ks-field-input--invalid {
+  border-color: #f38ba8 !important;
+  box-shadow: 0 0 0 1px rgba(243, 139, 168, 0.35);
 }
 
 .ks-field-input--label {
@@ -365,7 +541,65 @@ body.ks-dragging-tree .ks-dnd-over {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem;
-  margin-bottom: 0.5rem;
+}
+
+.search-edit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--ks-widget-border);
+}
+
+.search-custom-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem;
+  border: 1px dashed var(--ks-widget-border);
+  border-radius: 6px;
+}
+
+.search-custom-panel .ks-field-input,
+.search-custom-panel .ks-field-input--url {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.search-custom-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--ks-widget-muted);
+}
+
+.search-multi-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.search-multi-section > .ks-field--row {
+  margin: 0;
+}
+
+.search-multi-engines {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 0.35rem;
+}
+
+.search-multi-engine {
+  font-size: 0.78rem;
+  color: var(--ks-widget-muted);
+}
+
+.search-custom-toggle {
+  min-width: 3.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
 }
 
 .search-preset-btn {
@@ -400,8 +634,7 @@ body.ks-dragging-tree .ks-dnd-over {
 }
 
 .category,
-.bookmark,
-.search-bar {
+.bookmark {
   animation: scale-animate 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 

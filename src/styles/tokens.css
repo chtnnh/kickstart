@@ -27,6 +27,14 @@
   --branch: 1px solid var(--color12);
 }
 
+@media (prefers-contrast: more) {
+  :root {
+    --ks-link: #00e5ff;
+    --ks-link-hover: #ffff00;
+    --ks-widget-border: color-mix(in srgb, var(--ks-fg) 35%, transparent);
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -34,7 +42,7 @@
 }
 
 html {
-  font-size: 20px;
+  font-size: calc(20px * var(--ks-font-scale, 1));
   overflow-y: auto;
 }
 

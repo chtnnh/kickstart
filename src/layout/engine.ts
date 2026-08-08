@@ -4,6 +4,9 @@ import { renderTree } from "../tree/render.ts";
 import { renderClock } from "../widgets/clock.ts";
 import { renderQuote } from "../widgets/quote.ts";
 import { renderSpacer } from "../widgets/spacer.ts";
+import { renderPomodoro } from "../widgets/pomodoro.ts";
+import { renderNote } from "../widgets/note.ts";
+import { renderHn } from "../widgets/hn.ts";
 import { LAYOUT_ZONES } from "../config/types.ts";
 import { attachWidgetMoveButtons, getSortedWidgets, setupZoneLabel } from "./widget-move.ts";
 
@@ -63,6 +66,15 @@ export function renderLayout(ctx: AppContext, root: HTMLElement): void {
           break;
         case "spacer":
           wrapper.appendChild(renderSpacer(widget.spacer?.size ?? "md", ctx.editMode));
+          break;
+        case "pomodoro":
+          wrapper.appendChild(renderPomodoro(ctx, widget.id));
+          break;
+        case "note":
+          wrapper.appendChild(renderNote(ctx, widget));
+          break;
+        case "hn":
+          wrapper.appendChild(renderHn(ctx, widget.id));
           break;
       }
 

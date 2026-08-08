@@ -173,9 +173,26 @@ body.ks-dragging-tree .ks-widget-toolbar {
   width: 100%;
 }
 
+body:not(.ks-editing) .ks-widget--tree .ks-widget-body {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 body:not(.ks-editing) .ks-widget--tree {
   width: auto;
   max-width: 100%;
+}
+
+body:not(.ks-editing) .ks-widget--hn {
+  width: auto;
+  max-width: 100%;
+}
+
+body:not(.ks-editing) .ks-widget--hn.ks-align--center,
+body:not(.ks-editing) .ks-widget--hn.ks-align--start {
+  justify-content: center;
 }
 
 .ks-align--start,
@@ -194,9 +211,11 @@ body:not(.ks-editing) .ks-widget--tree {
 .ks-align--center .ks-widget-body > .search-bar,
 .ks-align--center .ks-widget-body > .ks-quote-wrap,
 .ks-align--center .ks-widget-body > .ks-clock-wrap,
+.ks-align--center .ks-widget-body > .ks-hn,
 .ks-align--center:not(.ks-widget--editable) > .search-bar,
 .ks-align--center:not(.ks-widget--editable) > .ks-quote-wrap,
-.ks-align--center:not(.ks-widget--editable) > .ks-clock-wrap {
+.ks-align--center:not(.ks-widget--editable) > .ks-clock-wrap,
+.ks-align--center:not(.ks-widget--editable) > .ks-hn {
   margin-inline: auto;
 }
 
@@ -204,6 +223,76 @@ body:not(.ks-editing) .ks-widget--tree {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+
+.ks-clock-zones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.5rem;
+  width: 100%;
+  max-width: 36rem;
+}
+
+.ks-clock-wrap--row .ks-clock-zones {
+  flex-direction: row;
+}
+
+.ks-clock-wrap--column .ks-clock-zones {
+  flex-direction: column;
+  align-items: center;
+}
+
+.ks-clock-wrap--row {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ks-clock-wrap--row .ks-clock-block {
+  flex: 0 1 14rem;
+}
+
+.ks-clock-wrap--row .ks-clock-block:last-child:nth-child(odd):not(:only-child) {
+  flex-basis: 14rem;
+}
+
+.ks-clock-zone-editor,
+.ks-clock-zone-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.ks-clock-zone-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: min(36rem, 100%);
+  margin-top: 0.5rem;
+}
+
+.ks-clock-layout-field {
+  flex: 1;
+  margin: 0;
+}
+
+.ks-clock-add-btn {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ks-clock-zone-editor {
+  margin-top: 0.35rem;
 }
 
 .ks-clock {
@@ -265,11 +354,12 @@ body:not(.ks-editing) .ks-widget--tree {
 
 .ks-controls {
   position: fixed;
-  top: 0.75rem;
+  bottom: 0.75rem;
   right: 0.75rem;
+  top: auto;
   z-index: 100;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5rem;
 }
 

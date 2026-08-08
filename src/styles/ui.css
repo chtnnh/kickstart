@@ -96,8 +96,8 @@
 
 .ks-settings-panel {
   width: 100%;
-  max-width: 26rem;
-  max-height: min(90dvh, 640px);
+  max-width: 32rem;
+  max-height: min(90dvh, 720px);
   display: flex;
   flex-direction: column;
   background: var(--ks-bg);
@@ -141,12 +141,120 @@
 
 .ks-settings-body {
   overflow-y: auto;
-  padding: 0.5rem 1.25rem 1.25rem;
+  padding: 0.75rem 1.25rem 1.25rem;
 }
 
 .ks-settings-group {
   border-bottom: 1px solid var(--ks-widget-border);
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
+}
+
+.ks-settings-group summary {
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ks-widget-muted);
+  list-style: none;
+  user-select: none;
+  padding: 0.35rem 0;
+}
+
+.ks-settings-group-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 0.35rem;
+}
+
+.ks-settings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ks-theme-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ks-theme-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--ks-widget-border);
+}
+
+.ks-settings-subdetails {
+  margin-top: 0.25rem;
+}
+
+.ks-settings-subdetails summary {
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--ks-widget-muted);
+  margin-bottom: 0.35rem;
+}
+
+.ks-settings-actions--tight {
+  margin-top: 0.25rem;
+}
+
+.ks-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.ks-profile-create {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.ks-profile-create .ks-field-input {
+  width: 100%;
+}
+
+.ks-profile-create .ks-btn {
+  white-space: nowrap;
+}
+
+.ks-privacy-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.ks-sync-card {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ks-sync-card-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ks-widget-fg);
+}
+
+.ks-sync-id-line {
+  margin: 0;
+}
+
+.ks-sync-id-line code {
+  font-size: 0.75rem;
+  word-break: break-all;
 }
 
 .ks-settings-group > .ks-settings-group-body {
@@ -269,18 +377,51 @@
 
 .ks-toast {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: 4.5rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2000;
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
   background: var(--ks-bg);
   border: 1px solid var(--ks-widget-accent);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--ks-widget-fg);
   font-family: var(--font);
   font-size: 0.85rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   animation: toast-in 0.2s ease;
+}
+
+.ks-toast-action {
+  font-family: var(--font);
+  font-size: 0.8rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--ks-widget-accent);
+  border-radius: 4px;
+  background: var(--ks-widget-accent);
+  color: var(--ks-bg);
+  cursor: pointer;
+}
+
+.ks-undo-bar {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 0.75rem;
+  z-index: 150;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  background: var(--ks-bg);
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  color: var(--ks-widget-muted);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .ks-toast--error {
@@ -291,4 +432,296 @@
 @keyframes toast-in {
   from { opacity: 0; transform: translateX(-50%) translateY(0.5rem); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.ks-favicon {
+  margin-right: 0.35rem;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
+.ks-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.35rem;
+  margin: 0.5rem 0;
+}
+
+.ks-theme-editor {
+  margin-top: 0.5rem;
+}
+
+.ks-note-input,
+.ks-note-text {
+  font-family: var(--font);
+  width: 100%;
+  max-width: 28rem;
+  color: var(--ks-widget-fg);
+  background: transparent;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.ks-hn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.ks-hn-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--ks-widget-border);
+  justify-content: flex-start;
+}
+
+.ks-hn-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 3px;
+  background: #ff6600;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.ks-hn-title {
+  font-weight: 600;
+  color: var(--ks-widget-fg);
+}
+
+.ks-hn-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ks-widget-border) 50%, transparent);
+}
+
+.ks-hn-rank {
+  color: var(--ks-widget-muted);
+  font-size: 0.75rem;
+  min-width: 1.25rem;
+}
+
+.ks-hn-points {
+  color: var(--ks-widget-muted);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.ks-hn-loading,
+.ks-hn-error {
+  color: var(--ks-widget-muted);
+  font-style: italic;
+  padding: 0.35rem 0;
+}
+
+.ks-hn-list a {
+  color: var(--ks-link);
+  text-decoration: none;
+}
+
+.ks-hn-list a:hover {
+  color: var(--ks-link-hover);
+}
+
+.ks-pomodoro {
+  text-align: center;
+  font-family: var(--font);
+}
+
+.ks-pomodoro-time {
+  font-size: 1.5rem;
+  margin: 0.25rem 0;
+}
+
+.ks-shortcuts-overlay,
+.ks-cmd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--ks-bg-overlay);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.ks-shortcuts-card,
+.ks-cmd-panel {
+  background: var(--ks-bg);
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 10px;
+  padding: 0;
+  width: min(92vw, 28rem);
+  color: var(--ks-widget-fg);
+  font-family: var(--font);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.ks-shortcuts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--ks-widget-border);
+}
+
+.ks-shortcuts-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.ks-shortcuts-close {
+  background: none;
+  border: none;
+  color: var(--ks-widget-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.ks-shortcuts-table--compact td {
+  font-size: 0.75rem;
+}
+
+.ks-shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ks-shortcuts-table td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ks-widget-border) 60%, transparent);
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
+.ks-shortcuts-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ks-shortcuts-keys {
+  width: 42%;
+  white-space: nowrap;
+}
+
+.ks-shortcuts-table kbd {
+  display: inline-block;
+  margin-right: 0.2rem;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ks-widget-fg) 6%, transparent);
+  font-size: 0.75rem;
+  font-family: var(--font);
+}
+
+.ks-cmd-input {
+  width: 100%;
+  font-family: var(--font);
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ks-widget-fg);
+}
+
+.ks-cmd-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ks-cmd-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--ks-widget-fg);
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+.ks-cmd-item:hover {
+  background: color-mix(in srgb, var(--ks-widget-accent) 15%, transparent);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  border: 1px solid var(--ks-widget-border);
+  border-radius: 3px;
+  background: var(--ks-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--ks-widget-accent);
+  border-color: var(--ks-widget-accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.28rem;
+  top: 0.1rem;
+  width: 0.28rem;
+  height: 0.55rem;
+  border: solid var(--ks-bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.ks-checkbox-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ks-settings-hint--widgets {
+  margin-top: 1rem;
+}
+
+.ks-hn--centered {
+  width: fit-content;
+  max-width: min(36rem, 100%);
+  margin-inline: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ks-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

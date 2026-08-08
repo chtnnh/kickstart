@@ -1,22 +1,38 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   build: {
     target: "es2022",
     cssMinify: true,
+    modulePreload: { polyfill: true },
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes("/src/themes/starttree-palettes")) return "palettes";
           if (id.includes("/src/tree/")) return "tree";
           if (id.includes("/src/sync/")) return "sync";
+          if (id.includes("/src/settings/")) return "settings";
+          if (id.includes("/src/onboarding/")) return "onboarding";
+          if (id.includes("/src/lib/command-palette")) return "cmd";
         },
       },
     },
   },
   plugins: [
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            filename: "dist/stats.html",
+            gzipSize: true,
+            open: false,
+          }),
+        ]
+      : []),
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: null,
       includeAssets: ["favicon.svg"],
       manifest: {
         name: "kickstart",

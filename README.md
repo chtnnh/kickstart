@@ -4,6 +4,8 @@ A fast, private new-tab start page inspired by [StartTreeV2](https://github.com/
 
 **v2.0** adds a theme editor, keyboard shortcuts, command palette, new widgets (pomodoro, sticky note, HN headlines), bookmark import, profiles, and performance improvements. Weather/news and live pywal sync are planned for a future release.
 
+**v2.0** adds a theme editor, keyboard shortcuts, command palette, new widgets (pomodoro, sticky note, HN headlines), bookmark import, profiles, and performance improvements. Weather/news and live pywal sync are planned for a future release.
+
 - **Stable URL** — config lives in `localStorage`, not the address bar
 - **Fast** — Vite bundle, service worker, Cloudflare edge caching
 - **Portable** — JSON export/import, StartTreeV2 URL migration
@@ -140,13 +142,15 @@ To add a theme, follow [CONTRIBUTING.md#adding-a-theme](CONTRIBUTING.md#adding-a
 
 ```
 src/
-  app.ts              # boot, edit mode, settings
-  config/             # schema, store, StartTreeV2 migration
+  app.ts              # boot, edit mode, settings, keyboard
+  config/             # schema, store, profiles, StartTreeV2 migration
   layout/             # zones, widget rendering, move controls
-  tree/               # bookmark tree view/edit
-  widgets/            # search, clock, quote, spacer
-  themes/             # StartTreeV2 palettes + token engine
+  tree/               # bookmark tree view/edit, undo, import
+  widgets/            # search, clock, quote, pomodoro, hn, note, spacer
+  themes/             # StartTreeV2 palettes + token engine + editor
+  search/             # history, calculator, navigation helpers
   sync/               # E2E encrypted Worker client
+  lib/                # keyboard, toast, PWA install, timezones
 worker/               # Cloudflare Worker (assets + KV sync API)
 ```
 
