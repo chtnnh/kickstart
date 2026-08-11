@@ -3,6 +3,15 @@ import { VitePWA } from "vite-plugin-pwa";
 import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
+  server: {
+    proxy: {
+      "/stats": {
+        target: "https://umami.chtnnhfoundation.org",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/stats/, ""),
+      },
+    },
+  },
   build: {
     target: "es2022",
     cssMinify: true,

@@ -1,4 +1,5 @@
 import { isValidSyncId, parseSyncIdFromPath, validateSyncPayload } from "./sync-utils.ts";
+import { UMAMI_PROXY_PREFIX, proxyUmamiRequest } from "./umami-proxy.ts";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -6,6 +7,10 @@ export default {
 
     if (url.pathname.startsWith("/api/sync/")) {
       return handleSync(request, env, url);
+    }
+
+    if (url.pathname.startsWith(UMAMI_PROXY_PREFIX)) {
+      return proxyUmamiRequest(request, env.UMAMI_ORIGIN);
     }
 
     // Static assets are served by the Assets binding (run_worker_first routes only /api/sync/* here)
@@ -16,6 +21,7 @@ export default {
 export interface Env {
   SYNC: KVNamespace;
   ASSETS: Fetcher;
+  UMAMI_ORIGIN: string;
 }
 
 const RATE_LIMIT_WINDOW = 60_000;

@@ -26,6 +26,7 @@ jobs:
         run: npm run build
         env:
           VITE_CF_WEB_ANALYTICS_TOKEN: ${{ secrets.CF_WEB_ANALYTICS_TOKEN }}
+          VITE_UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3

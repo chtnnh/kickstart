@@ -2,7 +2,7 @@
 
 Production URL: **https://kickstart.chtnnhfoundation.org**
 
-This guide configures the Worker, custom domain, KV sync storage, edge caching for sub-100ms loads, and Cloudflare Speed Insights (RUM).
+This guide configures the Worker, custom domain, KV sync storage, edge caching for sub-100ms loads, Umami analytics (first-party proxy), and optional Cloudflare Speed Insights (RUM).
 
 ## Prerequisites
 
@@ -48,9 +48,36 @@ Verify:
 curl -sI https://kickstart.chtnnhfoundation.org/ | head
 ```
 
-### 4. Cloudflare Speed Insights (Web Analytics)
+### 4. Umami analytics (first-party proxy)
 
-Speed Insights uses a lightweight RUM beacon (`beacon.min.js`) loaded **after idle** so it does not block first paint.
+Page views are collected via [Umami](https://umami.is) proxied through kickstart so requests stay on your domain (`/stats/*`) and bypass most ad blockers.
+
+1. In your Umami dashboard at **https://umami.chtnnhfoundation.org**, add a website for `kickstart.chtnnhfoundation.org`
+2. Copy the **Website ID** (UUID)
+
+Set the ID for production builds:
+
+**Local / manual deploy:**
+
+```bash
+export VITE_UMAMI_WEBSITE_ID="your_website_uuid"
+npm run build && npm run deploy
+```
+
+**GitHub Actions:** add repository secret `UMAMI_WEBSITE_ID`.
+
+The Worker proxies:
+
+| kickstart path | Umami upstream |
+|----------------|----------------|
+| `/stats/script.js` | `https://umami.chtnnhfoundation.org/script.js` |
+| `/stats/api/send` | `https://umami.chtnnhfoundation.org/api/send` |
+
+Users can disable analytics in Settings → Profiles & privacy → **Usage analytics**.
+
+### 5. Cloudflare Speed Insights (optional)
+
+Speed Insights uses a lightweight RUM beacon (`beacon.min.js`) loaded **after idle** so it does not block first paint. Umami is the primary analytics source; Speed Insights is optional supplemental RUM.
 
 1. Dashboard → **Analytics & logs** → **Web Analytics** → **Add a site**
 2. Choose hostname **kickstart.chtnnhfoundation.org** (or add manually)
@@ -74,7 +101,7 @@ View metrics: **Web Analytics** dashboard and **Speed** → **Observatory** (Rea
 
 | Layer | What we do |
 |-------|------------|
-| **Asset Worker** | `run_worker_first = ["/api/sync/*"]` — HTML/JS/CSS skip the User Worker and are served from the edge |
+| **Asset Worker** | `run_worker_first = ["/api/sync/*", "/stats/*"]` — HTML/JS/CSS skip the User Worker; sync and Umami proxy hit the Worker |
 | **`_headers`** | Hashed `/assets/*` → `immutable` 1y cache; `index.html` → `no-cache` |
 | **Bundle** | Vite code-splitting (`tree`, `sync` chunks); no framework runtime |
 | **PWA** | Service worker caches static assets after first visit |
@@ -150,6 +177,7 @@ Repository → **Settings** → **Secrets and variables** → **Actions** → **
 | `CLOUDFLARE_API_TOKEN` | Yes | Cloudflare API token (above) |
 | `CLOUDFLARE_ACCOUNT_ID` | Yes | Cloudflare dashboard sidebar |
 | `CF_WEB_ANALYTICS_TOKEN` | No | Web Analytics → Manage site → JS snippet token |
+| `UMAMI_WEBSITE_ID` | Yes (for analytics) | Umami → Websites → kickstart site UUID |
 
 No GitHub **variables** are required; KV namespace id lives in committed `wrangler.toml`.
 
@@ -174,5 +202,5 @@ npm run cf:dev       # Wrangler + assets + local KV
 |-------|-----|
 | Custom domain 522/525 | Check SSL mode; ensure zone is proxied |
 | Sync 500 | Verify KV `id` in `wrangler.toml` |
-| Duplicate analytics beacons | Disable auto-inject in Web Analytics; use our env token only |
+| Duplicate analytics beacons | Disable auto-inject in Web Analytics; use env tokens only. Umami loads via `/stats/script.js` only |
 | Stale assets after deploy | Hard refresh; `index.html` is `no-cache` — SW updates via `autoUpdate` |

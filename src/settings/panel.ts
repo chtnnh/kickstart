@@ -399,7 +399,7 @@ function buildSettingsHtml(config: KickstartConfig): string {
           </div>
           <div class="ks-privacy-fields">
             <label class="ks-field ks-field--row ks-checkbox-field">
-              <span>Speed Insights</span>
+              <span>Usage analytics</span>
               <input id="ks-privacy-analytics" type="checkbox" ${analytics ? "checked" : ""} />
             </label>
             <label class="ks-field ks-field--row ks-checkbox-field">

@@ -115,7 +115,7 @@ export class App {
     this.preloadSettings();
     this.render();
     initPwaInstall();
-    void import("./lib/speed-insights.ts").then((m) => m.initSpeedInsights(this.config));
+    void import("./lib/analytics.ts").then((m) => m.initAnalytics(this.config));
     void import("virtual:pwa-register").then(({ registerSW }) => {
       registerSW({ immediate: false });
     });

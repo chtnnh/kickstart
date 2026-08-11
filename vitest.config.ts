@@ -18,6 +18,7 @@ const logicModules = [
   "src/lib/pwa-install.ts",
   "src/lib/keyboard.ts",
   "worker/sync-utils.ts",
+  "worker/umami-proxy.ts",
 ];
 
 export default defineConfig({

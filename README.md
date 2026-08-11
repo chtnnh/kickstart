@@ -48,6 +48,7 @@ npm run deploy
 - Static assets bypass the User Worker (`run_worker_first`) and are cached at the edge via `_headers`
 - Hashed JS/CSS: `immutable` 1-year cache; HTML: `no-cache`
 - Speed Insights beacon loads on `requestIdleCallback` (no blocking on first paint)
+- Umami page analytics via first-party `/stats/*` proxy (bypasses most ad blockers)
 
 ### Cache headers
 
@@ -62,6 +63,8 @@ See [`public/_headers`](public/_headers) for asset cache policy. Sync API routes
 | `kickstart:meta` | Active profile, profile list, onboarding state (not synced/exported) |
 
 Switch profiles in Settings → Profiles & privacy. Create named profiles to keep separate trees and themes on one device.
+
+**Usage analytics** (Umami + optional Cloudflare Speed Insights) can be toggled in the same section.
 
 ## Import formats
 
